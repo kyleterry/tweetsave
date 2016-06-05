@@ -50,11 +50,12 @@ func (s *Stream) Start() {
 func (s *Stream) tweetHandler(tweet *twitter.Tweet) {
 	user := db.User{}
 	s.dbConn.FirstOrInit(&user, db.User{Name: tweet.User.ScreenName})
+
 	for _, url := range tweet.Entities.Urls {
 		log.Println("saving url from tweet")
 		s.dbConn.Create(&db.TweetURL{
-			URL:  url.ExpandedURL,
-			User: user,
+			URL:    url.ExpandedURL,
+			UserID: user.ID,
 		})
 	}
 }

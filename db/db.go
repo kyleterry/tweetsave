@@ -11,7 +11,7 @@ type TweetURL struct {
 	gorm.Model
 	URL    string
 	User   User
-	UserID int
+	UserID uint
 }
 
 type User struct {
