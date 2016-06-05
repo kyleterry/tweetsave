@@ -1,12 +1,12 @@
 package stream
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
 	"github.com/jinzhu/gorm"
+	"github.com/kyleterry/tweetsave/db"
 )
 
 type Config struct {
@@ -48,8 +48,13 @@ func (s *Stream) Start() {
 }
 
 func (s *Stream) tweetHandler(tweet *twitter.Tweet) {
-	fmt.Printf("%v\n", tweet)
-	// make sure we are connected to the database
-	// extract URL from tweet
-	// store URL in tweet_urls table
+	user := db.User{}
+	s.dbConn.FirstOrInit(&user, db.User{Name: tweet.User.ScreenName})
+	for _, url := range tweet.Entities.Urls {
+		log.Println("saving url from tweet")
+		s.dbConn.Create(&db.TweetURL{
+			URL:  url.ExpandedURL,
+			User: user,
+		})
+	}
 }

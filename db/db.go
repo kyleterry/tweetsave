@@ -7,7 +7,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-type TweetURLs struct {
+type TweetURL struct {
 	gorm.Model
 	URL    string
 	User   User
@@ -26,7 +26,7 @@ func New(dbURL string) *gorm.DB {
 	}
 
 	// create the tables if they don't exist
-	conn.AutoMigrate(&TweetURLs{}, &User{})
+	conn.AutoMigrate(&TweetURL{}, &User{})
 
 	return conn
 }
