@@ -40,5 +40,7 @@ func main() {
 	apiApp := api.New(dbConn)
 
 	log.Printf("API listening on http://%s", *apiBind)
-	http.ListenAndServe(*apiBind, apiApp)
+	if err := http.ListenAndServe(*apiBind, apiApp); err != nil {
+		log.Fatal(err)
+	}
 }

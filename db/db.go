@@ -25,6 +25,8 @@ func New(dbURL string) *gorm.DB {
 		log.Fatal(err)
 	}
 
+	conn.LogMode(true)
+
 	// create the tables if they don't exist
 	conn.AutoMigrate(&TweetURL{}, &User{})
 
