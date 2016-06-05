@@ -1,31 +1,39 @@
 package api
 
 import (
+	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/kyleterry/tweetsave/db"
 )
 
-func setup() *gorm.DB {
-	return db.New("postgres://localhost:5432/tweetsavetest?sslmode=disable")
-}
+var DB *gorm.DB
 
-func teardown(dbconn *gorm.DB) {
-	dbconn.DropTableIfExists(&db.TweetURL{}, &db.User{})
+func init() {
+	// DRY this up
+	rand.Seed(time.Now().UTC().UnixNano())
+	const chars = "abcdefghijklmnopqrstuvwxyz0123456789"
+	result := make([]byte, 10)
+	for i := 0; i < 10; i++ {
+		result[i] = chars[rand.Intn(len(chars))]
+	}
+	dbname := fmt.Sprintf("tweetsave-%s.db", string(result))
+
+	DB = db.New("sqlite3", filepath.Join(os.TempDir(), dbname))
 }
 
 func TestIndexHandlerReturnsJsonResponse(t *testing.T) {
-	dbconn := setup()
-
-	// clean up the test DB
-	defer teardown(dbconn)
-
-	dbconn.Create(
+	DB.Create(
 		&db.TweetURL{
 			URL: "http://for.tn/1t8eq4f",
 			User: db.User{
@@ -39,7 +47,7 @@ func TestIndexHandlerReturnsJsonResponse(t *testing.T) {
 			},
 		})
 
-	server := httptest.NewServer(New(dbconn))
+	server := httptest.NewServer(New(DB))
 	resp, err := http.Get(server.URL)
 	if err != nil {
 		t.Fatal(err)

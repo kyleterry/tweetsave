@@ -19,8 +19,8 @@ type User struct {
 	Name string
 }
 
-func New(dbURL string) *gorm.DB {
-	conn, err := gorm.Open("postgres", dbURL)
+func New(engine string, dbURL string) *gorm.DB {
+	conn, err := gorm.Open(engine, dbURL)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -25,7 +25,7 @@ func main() {
 		log.Fatal("All twitter credentials are required")
 	}
 
-	dbConn := db.New(*dbBind)
+	dbConn := db.New("postgres", *dbBind)
 
 	s := stream.New(dbConn,
 		&stream.Config{
