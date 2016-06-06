@@ -57,11 +57,14 @@ func (s *Stream) tweetHandler(tweet *twitter.Tweet) {
 	}
 
 	for _, url := range tweet.Entities.Urls {
+		err := tx.Where("url = ?", url.ExpandedURL).Find(&db.TweetURL{}).Error
 		log.Println("saving url from tweet")
-		if err := tx.Create(&db.TweetURL{URL: url.ExpandedURL, UserID: user.ID}).Error; err != nil {
-			tx.Rollback()
-			log.Println("ERROR saving data:", err)
-			return
+		if err != nil && err == gorm.ErrRecordNotFound {
+			if err := tx.Create(&db.TweetURL{URL: url.ExpandedURL, UserID: user.ID}).Error; err != nil {
+				tx.Rollback()
+				log.Println("ERROR saving data:", err)
+				return
+			}
 		}
 	}
 
