@@ -2,6 +2,9 @@
 	"ImportPath": "github.com/kyleterry/tweetsave",
 	"GoVersion": "go1.6",
 	"GodepVersion": "v74",
+	"Packages": [
+		"./..."
+	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/cenkalti/backoff",
@@ -47,6 +50,11 @@
 			"Rev": "bf0e23607840019d62e32e87e9af48e881d74b1e"
 		},
 		{
+			"ImportPath": "github.com/jinzhu/gorm/dialects/sqlite",
+			"Comment": "v1.0-25-gbf0e236",
+			"Rev": "bf0e23607840019d62e32e87e9af48e881d74b1e"
+		},
+		{
 			"ImportPath": "github.com/jinzhu/inflection",
 			"Rev": "3272df6c21d04180007eb3349844c89a3856bc25"
 		},
@@ -64,6 +72,11 @@
 			"ImportPath": "github.com/lib/pq/oid",
 			"Comment": "go1.0-cutoff-96-gee1442b",
 			"Rev": "ee1442bda7bd1b6a84e913bdb421cb1874ec629d"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-sqlite3",
+			"Comment": "v1.1.0-69-g38ee283",
+			"Rev": "38ee283dabf11c9cbdb968eebd79b1fa7acbabe6"
 		},
 		{
 			"ImportPath": "golang.org/x/net/context",
