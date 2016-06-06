@@ -115,7 +115,7 @@ func TestStreamTweetHandlerOnlyStoresUniqueURLs(t *testing.T) {
 
 	tweet2 := twitter.Tweet{
 		Text: "test tweet",
-		User: &twitter.User{ScreenName: "test_user"},
+		User: &twitter.User{ScreenName: "test_user2"},
 		Entities: &twitter.Entities{
 			Urls: []twitter.URLEntity{
 				twitter.URLEntity{
