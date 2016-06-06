@@ -48,14 +48,22 @@ func (s *Stream) Start() {
 }
 
 func (s *Stream) tweetHandler(tweet *twitter.Tweet) {
+	tx := s.dbConn.Begin()
 	user := db.User{}
-	s.dbConn.FirstOrCreate(&user, db.User{Name: tweet.User.ScreenName})
+	if err := tx.FirstOrCreate(&user, db.User{Name: tweet.User.ScreenName}).Error; err != nil {
+		tx.Rollback()
+		log.Println("ERROR saving data:", err)
+		return
+	}
 
 	for _, url := range tweet.Entities.Urls {
 		log.Println("saving url from tweet")
-		s.dbConn.Create(&db.TweetURL{
-			URL:    url.ExpandedURL,
-			UserID: user.ID,
-		})
+		if err := tx.Create(&db.TweetURL{URL: url.ExpandedURL, UserID: user.ID}).Error; err != nil {
+			tx.Rollback()
+			log.Println("ERROR saving data:", err)
+			return
+		}
 	}
+
+	tx.Commit()
 }
