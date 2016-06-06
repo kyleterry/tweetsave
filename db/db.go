@@ -9,14 +9,14 @@ import (
 
 type TweetURL struct {
 	gorm.Model
-	URL    string
+	URL    string `gorm:"not null;unique"`
 	User   User
 	UserID uint
 }
 
 type User struct {
 	gorm.Model
-	Name string
+	Name string `gorm:"not null;unique"`
 }
 
 func New(engine string, dbURL string) *gorm.DB {
