@@ -1,1 +1,1 @@
-web: tweetsave -consumer-key ${TWEETSAVE_CONSUMER_KEY} -consumer-secret ${TWEETSAVE_CONSUMER_SECRET} -access-token ${TWEETSAVE_ACCESS_TOKEN} -access-secret ${TWEETSAVE_ACCESS_SECRET} -db-bind ${DATABASE_URL} -bind "localhost:${PORT}"
+web: tweetsave -consumer-key ${TWEETSAVE_CONSUMER_KEY} -consumer-secret ${TWEETSAVE_CONSUMER_SECRET} -access-token ${TWEETSAVE_ACCESS_TOKEN} -access-secret ${TWEETSAVE_ACCESS_SECRET} -db-bind ${DATABASE_URL} -api-bind "localhost:${PORT}"
