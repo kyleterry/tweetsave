@@ -2,6 +2,7 @@ package db
 
 import (
 	"log"
+	"strings"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -31,4 +32,8 @@ func New(engine string, dbURL string) *gorm.DB {
 	conn.AutoMigrate(&TweetURL{}, &User{})
 
 	return conn
+}
+
+func IsUniqueConstraintErr(err error) bool {
+	return strings.Contains(err.Error(), "unique constraint")
 }
