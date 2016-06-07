@@ -37,9 +37,12 @@ git push heroku master
 ## Running in Docker
 
 ```bash
-# Compile for the docker container
-docker run --rm -v "$GOPATH":/work -e "GOPATH=/work" -w /work/src/github.com/kyleterry/tweetsave golang:alpine go build -v
-# Build it
 docker build -t tweetsave
-docker run -it --rm --name tweetsave tweetsave
+docker run -it --rm --name tweetsave \
+-e TWEETSAVE_CONSUMER_KEY=<your twitter consumer key> \
+-e TWEETSAVE_CONSUMER_SECRET=<your twitter consumer secret> \
+-e TWEETSAVE_ACCESS_TOKEN=<your access token> \
+-e TWEETSAVE_ACCESS_SECRET=<your access secret> \
+-e DATABASE_URL=postgres://<your remote db>/tweetsave \
+tweetsave
 ```
