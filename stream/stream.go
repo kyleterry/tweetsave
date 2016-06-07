@@ -59,12 +59,10 @@ func (s *Stream) tweetHandler(tweet *twitter.Tweet) {
 	for _, url := range tweet.Entities.Urls {
 		log.Println("saving url from tweet")
 		err := tx.Create(&db.TweetURL{URL: url.ExpandedURL, UserID: user.ID}).Error
-		if err != nil {
-			if !db.IsUniqueConstraintErr(err) {
-				tx.Rollback()
-				log.Println("ERROR saving data:", err)
-				return
-			}
+		if err != nil && !db.IsUniqueConstraintErr(err) {
+			tx.Rollback()
+			log.Println("ERROR saving data:", err)
+			return
 		}
 	}
 
