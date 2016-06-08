@@ -96,3 +96,43 @@ func TestStreamTweetHandlerCanStoreTweetURLs(t *testing.T) {
 		t.Error("Resulting URL did not contain http://example.com")
 	}
 }
+
+func TestStreamTweetHandlerOnlyStoresUniqueURLs(t *testing.T) {
+	s := Stream{dbConn: DB}
+
+	// make fake tweets
+	tweet := twitter.Tweet{
+		Text: "test tweet",
+		User: &twitter.User{ScreenName: "test_user"},
+		Entities: &twitter.Entities{
+			Urls: []twitter.URLEntity{
+				twitter.URLEntity{
+					ExpandedURL: "http://example.com",
+				},
+			},
+		},
+	}
+
+	tweet2 := twitter.Tweet{
+		Text: "test tweet",
+		User: &twitter.User{ScreenName: "test_user2"},
+		Entities: &twitter.Entities{
+			Urls: []twitter.URLEntity{
+				twitter.URLEntity{
+					ExpandedURL: "http://example.com",
+				},
+			},
+		},
+	}
+
+	s.tweetHandler(&tweet)
+	s.tweetHandler(&tweet2)
+
+	// see if the record is in the DB
+	var urls []db.TweetURL
+	DB.Where("url = ?", "http://example.com").Find(&urls)
+
+	if len(urls) > 1 {
+		t.Error("Stream tweet handler should only store unique urls.")
+	}
+}
